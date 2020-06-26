@@ -36,7 +36,7 @@
 [//]: # (╠═══╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬════╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═══╣)
 
 
-#### :gem: Usage:
+## :gem: Usage:
 
 ```bash
 $ python ./scripts/google_translator.py [dir-name-in-locale] ['--same']
@@ -52,7 +52,7 @@ The translated file will be created in the path of locale.
 If you put "same" word after command, target file will be override.
 
 
-#### :page_facing_up: Other commands:
+## :page_facing_up: Other commands:
 
 | parameter     | description |
 | :-----        | :----       |

@@ -1,0 +1,9 @@
+# Image Cache File in Windows OS
+Thumbs.db
+
+# Desktop Services Store in Mac OS
+.DS_Store
+
+# Google Cloud Sync
+.tmp.drivedownload/
+*.driveupload

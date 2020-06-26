@@ -50,33 +50,49 @@ class Trans:
         elif self.target == 'zh_Hans':
             self.target = 'zh-CN'
 
+    def __wrap_fucking_punctuation(self, text):
+        text = text.replace('  ', ' ')
+        text = text.replace('\\ "', '\\"')
+        text = text.replace(' " %', ' \\"%')
+        text = text.replace('\\ \\" %', ' \"%')
+        text = text.replace('s \\"', 's\\" ')
+        text = text.replace('\\" %', '\\"%')
+        text = text.replace('（%(', '( %(')
+        text = text.replace('(%(', '( %(')
+        text = text.replace(')s)', ')s )')
+        text = text.replace(')s）', ')s ）')
+        text = text.replace('s>%', 's > %')
+        text = text.replace('s>=%', 's >= %')
+        text = text.replace('s=%', 's = %')
+        text = text.replace('s<%', 's < %')
+        text = text.replace('s<=%', 's <= %')
+        text = text.replace('s+%', 's + %')
+        text = text.replace('s-%', 's - %')
+        text = text.replace('s×%', 's × %')
+        text = text.replace('s÷%', 's ÷ %')
+        text = text.replace('s%', 's %')
+        text = text.replace('s э"', 's\\"')
+        text = text.replace('. (', '.  (')
+        text = text.replace('。 (', '。  (')
+        text = text.replace('（', ' (')
+        text = text.replace('）', ') ')
+        return text
+
     def __fix_format_string(self, text):
         text_list = re.split(r'%\((\w+)\)s', text)
         new_text = str()
         for count, piece in enumerate(text_list):
             if count % 2:
-                new_text += '%(' + piece + ')s'
+                new_text += ' %(' + piece + ')s '
             else:
                 if piece:
                     new_text += self.translator.translate(
                         piece, dest=self.target
                     ).text
                 else:
-                    new_text += 'msgstr ""\n'
+                    new_text += 'msgstr '
 
-        new_text = new_text.replace('  ', ' ')
-        new_text = new_text.replace('s>%', 's > %')
-        new_text = new_text.replace('s>=%', 's >= %')
-        new_text = new_text.replace('s=%', 's = %')
-        new_text = new_text.replace('s<%', 's < %')
-        new_text = new_text.replace('s<=%', 's <= %')
-        new_text = new_text.replace('s+%', 's+%')
-        new_text = new_text.replace('s-%', 's-%')
-        new_text = new_text.replace('s×%', 's×%')
-        new_text = new_text.replace('s÷%', 's÷%')
-        new_text = new_text.replace('s%', 's%')
-
-        return new_text
+        return self.__wrap_fucking_punctuation(new_text)
 
     def __clean_target(self):
         with open(self.target_path, 'r') as f:
@@ -106,6 +122,7 @@ class Trans:
                     else:
                         container += 'msgstr ""\n'
 
+                    container = self.__wrap_fucking_punctuation(container)
                     self.lines.append(container)
 
                 elif line.startswith('msgstr "'):
@@ -222,7 +239,10 @@ class Main:
                     self.success += 1
                 except TypeError:
                     self.failure += 1
-                    print(f'{lang.upper()} failed via Google Translator')
+                    print(f'{lang.upper()} failed via Google Translator.')
+                    print('Guess it is the translator side effect.')
+                except ValueError:
+                    print(f'{lang.upper()} isn not supported.')
             self.__msg_success()
         else:
             self.__msg_fileNotFound()
